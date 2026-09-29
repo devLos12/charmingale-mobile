@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "charmingale-mobile",
+    "slug": "charmingale-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/charmingale.png",
+    "scheme": "charmingalemobile",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "icon": "./assets/images/charmingale.png"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FDEDF2",
+        "foregroundImage": "./assets/images/charmingale.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "googleServicesFile": "./google-services.json",
+      "package": "com.anonymous.charmingale"
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#208AEF",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 76
+        }
+      ],
+      "react-native-blob-util",
+      "expo-notifications",
+      "expo-image",
+      "expo-web-browser",
+      "./plugins/withNavBarContrast"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "50241d1f-fa04-4cb1-a623-d69768fdb28c"
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies (both apps)
+node_modules/
+**/node_modules/
+
+# ==== charmingale-mobile (Expo) ====
+charmingale-mobile/.expo/
+charmingale-mobile/dist/
+charmingale-mobile/web-build/
+charmingale-mobile/expo-env.d.ts
+charmingale-mobile/.kotlin/
+charmingale-mobile/*.orig.*
+charmingale-mobile/*.jks
+charmingale-mobile/*.p8
+charmingale-mobile/*.p12
+charmingale-mobile/*.key
+charmingale-mobile/*.mobileprovision
+charmingale-mobile/.metro-health-check*
+charmingale-mobile/*firebase-adminsdk*.json
+
+# generated native folders
+charmingale-mobile/ios/
+charmingale-mobile/android/
+
+# ==== server ====
+server/dist/
+server/build/
+server/prisma/*.db
+server/src/generated/
+
+# ==== shared ====
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+
+# macOS
+.DS_Store
+*.pem
+
+# env files (both apps)
+.env
+.env*.local
+*.env
+
+
+# typescript
+*.tsbuildinfo
+
+# editor
+.vscode/
+.idea/
+*.swp
+
+example

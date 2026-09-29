@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model PnleConcept {
+  id                 Int       @id @default(autoincrement())
+
+  // category info (kulay/subject)
+  categoryName       String
+  categoryColorHex   String
+  categoryColorName  String
+  categoryOrder      Int
+
+
+  // topic info (grouping/display lang, hindi na unlock unit)
+  groupLabel         String?
+  topicHeader        String
+  topicOrder         Int
+
+  // concept info -- ITO ang unlock/timer unit
+  conceptText        String
+  conceptOrder       Int
+  allocatedMinutes   Int
+
+  // progress state, per concept
+  completed          Boolean   @default(false)
+  remainingSeconds   Int?
+  running            Boolean   @default(false)
+  pauseCount         Int       @default(0)
+  completedAt        DateTime?
+
+  files              File[]
+}
+
+
+model File {
+  id             Int      @id @default(autoincrement())
+  conceptId      Int
+
+  originalName   String
+  storedFilename String
+  mimeType       String
+  sizeBytes      Int
+  uploadedAt     DateTime @default(now())
+
+  concept        PnleConcept @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+}
+
+
+model Streak {
+  id       Int       @id @default(autoincrement())
+  count    Int       @default(0)
+  lastDate DateTime? @db.Date
+}
+
+
+model DeviceToken {
+  id          Int      @id @default(autoincrement())
+  token       String   @unique
+  createdAt   DateTime @default(now())
+}
+
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+
+  title       String
+  body        String
+  path        String?
+  read        Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+}
+
