@@ -11,7 +11,8 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://charmingale-mobile.onrender.com"
+        "EXPO_PUBLIC_API_URL": "https://charmingale-mobile.onrender.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "329502425657-g78qi48mogn3288mf54jtps561jdsi0f.apps.googleusercontent.com"
       }
     },
     "production": {
