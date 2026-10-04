@@ -2,9 +2,15 @@
     import { CategoryStore } from "../types";
     import { BASE_URL } from "@/constant";
     import { ApiResponse } from "@/@types";
+    import { getToken } from "@/lib/google";
 
 
-
+    const authHeader = async () => {
+        const token = await getToken();
+        return { Authorization: `Bearer ${token}` };
+    };
+    
+    
 
     export const useCategoryStore = create<CategoryStore>((set) => ({
 
@@ -23,7 +29,8 @@
             try {
                 
                 const res = await fetch(`${BASE_URL}/api/categories/get-categories`, {
-                    method: "GET"
+                    method: "GET",
+                    headers: await authHeader()
                 });
 
                 const data: ApiResponse = await res.json();
@@ -55,7 +62,8 @@
             try {
 
                 const res = await fetch(`${BASE_URL}/api/categories/get-category-topics/${colorName}`, {
-                    method: "GET"
+                    method: "GET",
+                    headers: await authHeader()
                 });
                 
                 const data: ApiResponse = await res.json();
@@ -85,7 +93,8 @@
                             
             try {
                 const res = await fetch(`${BASE_URL}/api/categories/get-concept-details/${conceptId}`, {
-                    method: "GET"
+                    method: "GET",
+                    headers: await authHeader()
                 });
 
                 const data: ApiResponse = await res.json();
@@ -104,8 +113,3 @@
         }
 
     }));
-
-
-
-
-

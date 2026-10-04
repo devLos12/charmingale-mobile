@@ -21,15 +21,14 @@ const isYesterday = (lastDate: Date, today: Date): boolean => {
 
 
 
-
-export const updateStreak = async () => {
+export const updateStreak = async (userId: number) => {
     const today = getPHDateOnly();
 
-    let streak = await prisma.streak.findFirst();
+    let streak = await prisma.streak.findUnique({ where: { userId } });
 
     if (!streak) {
         streak = await prisma.streak.create({
-            data: { count: 1, lastDate: today },
+            data: { userId, count: 1, lastDate: today },
         });
         return streak;
     }
@@ -43,7 +42,7 @@ export const updateStreak = async () => {
         : 1;
 
     streak = await prisma.streak.update({
-        where: { id: streak.id },
+        where: { userId },
         data: { count: newCount, lastDate: today },
     });
 

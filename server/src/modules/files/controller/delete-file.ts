@@ -12,13 +12,14 @@ export const deleteFile = async (req: Request, res: Response ) => {
 
         const { conceptId, deleteId } = req.body;        
 
-
         const file = await prisma.file.findFirst({
             where: {
+                userId: req.userId,
                 id: Number(deleteId),
                 conceptId: Number(conceptId)
             }
-        })
+        });
+
 
         if(!file) {
             return res.status(HTTPSTATUS.NOT_FOUND).json({
@@ -29,7 +30,10 @@ export const deleteFile = async (req: Request, res: Response ) => {
 
 
         await prisma.file.delete({
-            where: { id: Number(deleteId)}
+            where: { 
+                userId: req.userId,
+                id: Number(deleteId)
+            }
         });
 
         res.status(HTTPSTATUS.OK).json({

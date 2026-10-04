@@ -5,9 +5,14 @@ import type { Request, Response } from "express";
 
 
 
+
 const GetCategories = async (req: Request, res: Response) => {
 
+
     try {
+
+        const userId = req.userId;
+
         
         const rows = await prisma.pnleConcept.findMany({
             select: {
@@ -15,7 +20,10 @@ const GetCategories = async (req: Request, res: Response) => {
                 categoryColorHex: true,
                 categoryName: true,
                 categoryOrder: true,
-                completed: true,
+                progress: {
+                    where: { userId: userId },
+                    select: { completed: true },
+                },
             }
         });
 
@@ -30,15 +38,14 @@ const GetCategories = async (req: Request, res: Response) => {
             completed: boolean;
         }>();
 
-
-
+        
         for(const row of rows) {
 
             const existing = map.get(row.categoryName);
 
             if(existing){
                 existing.topicTotal += 1;
-                if(row.completed) existing.topicDone += 1;
+                if(row.progress[0]?.completed) existing.topicDone += 1;
             } else {
 
                 map.set(row.categoryName, {
@@ -47,7 +54,7 @@ const GetCategories = async (req: Request, res: Response) => {
                     categoryName: row.categoryName,
                     order: row.categoryOrder,
                     topicTotal: 1,
-                    topicDone: row.completed ? 1 : 0,
+                    topicDone: row.progress[0]?.completed ? 1 : 0,
                     completed: false
                 });
             }

@@ -9,36 +9,53 @@ const getDashboardStats = async (req: Request, res: Response) => {
 
     try {
 
+        const userId = req.userId;
+
+        // shared ang bilang ng topics, pareho para sa lahat
         const totalTopics = await prisma.pnleConcept.count();
-        const completedTopics = await prisma.pnleConcept.count({
-            where: { completed: true }
+
+        // individual na ang completed
+        const completedTopics = await prisma.conceptProgress.count({
+            where: { userId, completed: true }
         });
 
-        const touchedConcepts = await prisma.pnleConcept.findMany({
+        const touchedConcepts = await prisma.conceptProgress.findMany({
             where: {
+                userId,
                 OR: [
                     { completed: true },
                     { remainingSeconds: { not: null } },
                 ],
             },
             select: {
-                allocatedMinutes: true,
-                remainingSeconds: true,
                 completed: true,
+                remainingSeconds: true,
+                concept: {
+                    select: { allocatedMinutes: true },
+                },
             },
+
         });
 
-        const totalStudiedSeconds = touchedConcepts.reduce((acc, concept) => {
-            const allocatedSeconds = concept.allocatedMinutes * 60;
-            const elapsed = concept.completed
+
+        const totalStudiedSeconds = touchedConcepts.reduce((acc, progress) => {
+            const allocatedSeconds = progress.concept.allocatedMinutes * 60;
+            const elapsed = progress.completed
                 ? allocatedSeconds
-                : allocatedSeconds - (concept.remainingSeconds ?? allocatedSeconds);
+                : allocatedSeconds - (progress.remainingSeconds ?? allocatedSeconds);
             return acc + elapsed;
         }, 0);
 
-        
-        const streak = await prisma.streak.findFirst();
+                
+        const streak = await prisma.streak.findUnique({ where: { userId } });
 
+
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { 
+                name: true 
+            }
+        })
 
         res.status(HTTPSTATUS.OK).json({
             success: true,
@@ -47,7 +64,8 @@ const getDashboardStats = async (req: Request, res: Response) => {
                 totalTopics,
                 completedTopics,
                 totalStudiedSeconds,
-                streakCounts: streak?.count ?? 0
+                streakCounts: streak?.count ?? 0,
+                name: user?.name ?? null
             }
         });
 

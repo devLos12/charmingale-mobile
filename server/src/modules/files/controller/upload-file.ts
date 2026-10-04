@@ -49,6 +49,7 @@ const uploadFiles = async( req: Request, res: Response ) => {
 
         const savedFile = await prisma.file.create({
             data: {
+                userId: req.userId,
                 conceptId: id,
                 originalName: file.originalname,
                 storedFilename: uploadResult.secure_url,

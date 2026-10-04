@@ -4,8 +4,6 @@ import type { Request, Response } from "express"
 
 
 
-
-
 const updateNotification = async (req: Request, res: Response) => {
 
     try {
@@ -13,10 +11,17 @@ const updateNotification = async (req: Request, res: Response) => {
         const { notifId } = req.params;
         const id = Number(notifId);
         
-        await prisma.notification.update({
-            where: { id },
+        const result = await prisma.notification.updateMany({
+            where: { id, userId: req.userId },
             data: { read: true },
-        })        
+        });
+
+        if (result.count === 0) {
+            return res.status(HTTPSTATUS.NOT_FOUND).json({
+                success: false,
+                message: "Notification not found.",
+            });
+        }
 
         res.status(HTTPSTATUS.OK).json({
             success: true,

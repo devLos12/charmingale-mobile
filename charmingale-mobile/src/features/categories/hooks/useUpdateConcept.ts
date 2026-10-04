@@ -1,7 +1,16 @@
 import { ApiResponse } from "@/@types";
 import { BASE_URL } from "@/constant";
 import { useCategoryStore } from "../store";
+import { getToken } from "@/lib/google";
 
+
+
+
+
+const authHeader = async () => {
+    const token = await getToken();
+    return { Authorization: `Bearer ${token}` };
+};
 
 
 
@@ -24,7 +33,7 @@ export const useUpdateConcept = () => {
             
             categoryTopics: state.categoryTopics.map((c) => 
                 c.id === conceptId
-                    ? { ...c, completed: true, remainingSec: 0 }
+                    ? { ...c, completed: true, remainingSeconds: 0 }
                     : c
             )
         }));
@@ -34,7 +43,8 @@ export const useUpdateConcept = () => {
 
             const id = String(conceptId);
             const res = await fetch(`${BASE_URL}/api/categories/mark-completed/${id}`, {
-                method: "PATCH"
+                method: "PATCH",
+                headers: await authHeader()
             });
 
             const data: ApiResponse = await res.json();
@@ -76,6 +86,7 @@ export const useUpdateConcept = () => {
                 method: "PATCH",
                 headers: { 
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${await getToken()}`
                 },
 
                 body: JSON.stringify({ conceptId, remainingSec })

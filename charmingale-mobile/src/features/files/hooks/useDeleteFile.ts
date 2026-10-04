@@ -1,5 +1,6 @@
 import { ApiResponse } from "@/@types";
 import { BASE_URL } from "@/constant";
+import { getToken } from "@/lib/google";
 import { useState } from "react";
 import { useFilesStore } from "../store";
 
@@ -28,7 +29,8 @@ export const useDeleteFile = () => {
             const res = await fetch(`${BASE_URL}/api/files/delete-file`, { 
                 method: "DELETE", 
                 headers: {
-                    "Content-Type": "application/json" 
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${await getToken()}`,
                 },
                 body: JSON.stringify({ conceptId, deleteId })
             });
@@ -45,7 +47,7 @@ export const useDeleteFile = () => {
         } finally {
             setLoadingDelete(false);
         }
-
+        
 
         return false
 

@@ -108,10 +108,13 @@ export default function Onboarding() {
   const [index, setIndex] = useState(0);
   const isLast = index === SLIDES.length - 1;
 
+
+    
   const finish = async () => {
     await AsyncStorage.setItem('hasSeenOnboarding', 'true');
-    router.replace('/');
+    router.replace('/sign-in');
   };
+
 
   const next = () => {
     if (isLast) return finish();
@@ -167,7 +170,7 @@ export default function Onboarding() {
         <TouchableOpacity
           onPress={next}
           activeOpacity={0.8}
-          className="bg-rose rounded-full py-4 items-center"
+          className="bg-roseDeep rounded-full py-4 items-center"
         >
           <Text className="text-white font-bold text-base">
             {isLast ? 'Get Started' : 'Next'}

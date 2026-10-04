@@ -54,11 +54,11 @@ const CategoryScreen = ({ colorName }: { colorName: string }) => {
 
 
     if(loading.isCategoryTopic) return <LoadingScreen/>
-
+    
         
 
     return (
-        <SafeAreaView className="flex-1 bg-blush">
+        <SafeAreaView className="flex-1 bg-blush" edges={['top']}>
             <View className="flex-row gap-3 items-center bg-transparent p-6">
                 <TouchableOpacity
                     onPress={() => router.back()}

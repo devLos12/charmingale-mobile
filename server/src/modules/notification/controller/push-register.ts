@@ -6,13 +6,12 @@ import { prisma } from "@/lib/prisma";
 
 
 
-
 const pushRegister = async ( req: Request, res: Response ) => {
 
     try {
         
         const { token } = req.body;
-
+        
         if (!token) {
             return res.status(HTTPSTATUS.BAD_REQUEST).json({
                 success: false,
@@ -23,8 +22,8 @@ const pushRegister = async ( req: Request, res: Response ) => {
 
         await prisma.deviceToken.upsert({
             where: { token: token },
-            update: {},
-            create: { token: token },
+            update: { userId: req.userId },
+            create: { token: token, userId: req.userId },
         });
         
         return res.status(HTTPSTATUS.OK).json({

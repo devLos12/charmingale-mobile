@@ -5,12 +5,12 @@ import { HTTPSTATUS } from "@/common/http-code";
 
 
 
-
 const getNotification = async ( req: Request, res: Response ) => {
 
     try {
-        
+
         const notifications = await prisma.notification.findMany({
+            where: { userId: req.userId },
             orderBy: {
                 createdAt: 'desc'
             }

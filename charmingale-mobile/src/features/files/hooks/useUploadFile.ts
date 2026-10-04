@@ -1,6 +1,7 @@
 // hooks/useUploadFile.ts
 import { ApiResponse } from "@/@types";
 import { BASE_URL } from "@/constant";
+import { getToken } from "@/lib/google";
 import { useState } from "react";
 import { FileTypeProps } from "../types";
 import ReactNativeBlobUtil from "react-native-blob-util";
@@ -23,6 +24,7 @@ export const useUploadFile = () => {
                 `${BASE_URL}/api/files/upload-file/${conceptId}`,
                 {
                     'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${await getToken()}`,
                 },
                 [
                     {

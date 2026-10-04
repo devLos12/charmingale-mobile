@@ -1,5 +1,6 @@
 import { ApiResponse } from "@/@types";
 import { BASE_URL } from "@/constant";
+import { getToken } from "@/lib/google";
 import { useState } from "react"
 
 
@@ -16,7 +17,10 @@ export const useUpdateNotification = () => {
 
         try {
             
-            const res = await fetch(`${BASE_URL}/api/notification/update-notification/${notifId}`,{ method: "PATCH" });
+            const res = await fetch(`${BASE_URL}/api/notification/update-notification/${notifId}`,{
+                method: "PATCH",
+                headers: { Authorization: `Bearer ${await getToken()}` }
+            });
             const data: ApiResponse = await res.json();
             
             if(!res.ok || !data.success) throw new Error();

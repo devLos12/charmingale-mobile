@@ -6,6 +6,7 @@ import categoriesRouter from "@/modules/categories/routes";
 import filesRouter from "@/modules/files/routes";
 import dashboardRouter from "@/modules/dashboard/routes";
 import notifRouter from "@/modules/notification/routes";
+import authRouter from "@/modules/auth/routes";
 
 
 
@@ -27,7 +28,7 @@ indexRouter.use('/categories', categoriesRouter);
 indexRouter.use('/files', filesRouter);
 indexRouter.use('/dashboard', dashboardRouter);
 indexRouter.use('/notification', notifRouter);
-
+indexRouter.use('/auth', authRouter);
 
 export default indexRouter;
 

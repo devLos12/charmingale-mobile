@@ -5,31 +5,47 @@ const EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send";
 
 
 
-
-// idagdag sa taas nito (bago yung function):
+// {name} ang papalitan ng pangalan ng user
 const MOTIVATIONAL_MESSAGES = [
-  "Hi Charm, it's time for review! 📚",
+  "Hi {name}, it's time for review! 📚",
   "Let's go, future RN! 💪",
   "Your future patients are counting on you. Review time! 🩺",
-  "One topic at a time, Charm. You've got this! ✨",
+  "One topic at a time, {name}. You've got this! ✨",
   "PNLE won't pass itself. Let's review! 📖",
   "Small steps today, big wins on exam day. 🎯",
-  "Charm, your consistency is your superpower. Keep going! 🔥",
+  "{name}, your consistency is your superpower. Keep going! 🔥",
   "Take a break from scrolling, review for 10 mins instead 😉",
   "You didn't come this far to stop now. Review time! 🚀",
-  "Future Nurse Charm is cheering you on. Let's study! 👩‍⚕️",
+  "Future Nurse {name} is cheering you on. Let's study! 👩‍⚕️",
 ];
 
-function getRandomMessage() {
-  return MOTIVATIONAL_MESSAGES[Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length)];
-}
 
+
+const getDisplayName = (name: string | null | undefined) => {
+  if (!name) return "there";
+
+  const first = name.trim().split(/[\s-]+/)[0];
+
+  // Shiermae-Safhiera, Shiermae Safhiera, shiermae safhiera -> Charmy
+  if (first.toLowerCase() === "shiermae") return "Charmy";
+
+  return first;
+};
+
+
+
+function getRandomMessage(name: string | null | undefined) {
+  const message = MOTIVATIONAL_MESSAGES[Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length)];
+  return message.replaceAll("{name}", getDisplayName(name));
+}
 
 
 
 export const sendHourlyReminder = async () => {
 
-  const devices = await prisma.deviceToken.findMany();
+  const devices = await prisma.deviceToken.findMany({
+    include: { user: { select: { name: true } } },
+  });
 
   if (devices.length === 0) {
     console.log("No device tokens found, skipping push.");
@@ -40,11 +56,10 @@ export const sendHourlyReminder = async () => {
     to: device.token,
     sound: "default",
     title: "Charmingale",
-    body: getRandomMessage(),
+    body: getRandomMessage(device.user?.name),
   }));
   
   
-
   try {
     const response = await fetch(EXPO_PUSH_URL, {
       method: "POST",

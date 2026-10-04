@@ -14,6 +14,7 @@ const CategoryPreview = () => {
     });
   };
 
+  
   return (
     categories.map((data, i) => {
 

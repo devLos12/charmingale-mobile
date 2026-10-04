@@ -12,7 +12,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#FDEDF2",
+        "backgroundColor": "#8E1145",
         "foregroundImage": "./assets/images/charmingale.png"
       },
       "predictiveBackGestureEnabled": false,
@@ -28,16 +28,21 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#8E1145",
+          "image": "./assets/images/charmingale.png",
+          "imageWidth": 300
         }
       ],
       "react-native-blob-util",
+      "@react-native-google-signin/google-signin",
       "expo-notifications",
       "expo-image",
       "expo-web-browser",
-      "./plugins/withNavBarContrast"
+      [ 
+        "expo-navigation-bar", { 
+          "enforceContrast": false 
+        } 
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

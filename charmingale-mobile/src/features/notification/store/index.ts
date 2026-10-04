@@ -2,6 +2,10 @@ import { create } from "zustand";
 import { NotificationStore } from "../types";
 import { BASE_URL } from "@/constant";
 import { ApiResponse } from "@/@types";
+import { getToken } from "@/lib/google";
+
+
+
 
 
 
@@ -16,7 +20,10 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
 
         try {
 
-            const res = await fetch(`${BASE_URL}/api/notification/get-notification`, { method: "GET" });
+            const res = await fetch(`${BASE_URL}/api/notification/get-notification`, { 
+                method: "GET", 
+                headers: { Authorization: `Bearer ${await getToken()}` }
+            });
             const data: ApiResponse  = await res.json();
             if(!res.ok || !data.success ) throw new Error(data.message);
             

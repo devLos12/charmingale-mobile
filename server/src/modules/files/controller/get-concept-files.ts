@@ -13,7 +13,10 @@ const getConceptFiles = async(req: Request, res: Response ) => {
         const id = Number(conceptId);
         
         const conceptFiles = await prisma.file.findMany({
-            where: { conceptId: id },
+            where: {
+                userId: req.userId, 
+                conceptId: id 
+            },
             orderBy: { uploadedAt: "desc" }
         });
 

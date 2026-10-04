@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { FilesStore } from '../types';
 import { ApiResponse } from '@/@types';
 import { BASE_URL } from '@/constant';
+import { getToken } from '@/lib/google';
 
 export const useFilesStore = create<FilesStore>((set) => ({
 
@@ -17,7 +18,10 @@ export const useFilesStore = create<FilesStore>((set) => ({
 
         try {
 
-            const res = await fetch(`${BASE_URL}/api/files/get-concept-files/${conceptId}`, { method: "GET" });
+            const res = await fetch(`${BASE_URL}/api/files/get-concept-files/${conceptId}`, {
+                method: "GET",
+                headers: { Authorization: `Bearer ${await getToken()}` },
+            });
 
             const data: ApiResponse = await res.json();
             if (!res.ok || !data.success) throw new Error(data.message);

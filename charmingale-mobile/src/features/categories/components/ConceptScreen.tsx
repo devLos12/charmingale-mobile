@@ -109,7 +109,7 @@ const ConceptScreen = ({ conceptId }: { conceptId: string }) => {
 
   return (
     <>
-      <SafeAreaView className="flex-1 bg-blush">
+      <SafeAreaView className="flex-1 bg-blush" edges={['top']}>
 
         {/* Minimal top bar */}
         <View className="flex-row items-center p-6 gap-3 bg-transparent">

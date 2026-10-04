@@ -8,6 +8,22 @@ datasource db {
 }
 
 
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String?
+  googleId  String?  @unique
+  name      String?
+  createdAt DateTime @default(now())
+
+  progress      ConceptProgress[]
+  files         File[]
+  streak        Streak?
+  deviceTokens  DeviceToken[]
+  notifications Notification[]
+}
+
+
 model PnleConcept {
   id                 Int       @id @default(autoincrement())
 
@@ -16,32 +32,48 @@ model PnleConcept {
   categoryColorHex   String
   categoryColorName  String
   categoryOrder      Int
-
+    
 
   // topic info (grouping/display lang, hindi na unlock unit)
   groupLabel         String?
   topicHeader        String
   topicOrder         Int
+  
 
   // concept info -- ITO ang unlock/timer unit
   conceptText        String
   conceptOrder       Int
   allocatedMinutes   Int
 
-  // progress state, per concept
-  completed          Boolean   @default(false)
-  remainingSeconds   Int?
-  running            Boolean   @default(false)
-  pauseCount         Int       @default(0)
-  completedAt        DateTime?
-
+  progress           ConceptProgress[]
   files              File[]
+}
+
+
+
+// progress state, per user per concept
+model ConceptProgress {
+  id               Int       @id @default(autoincrement())
+  userId           Int
+  conceptId        Int
+
+  completed        Boolean   @default(false)
+  remainingSeconds Int?
+  running          Boolean   @default(false)
+  pauseCount       Int       @default(0)
+  completedAt      DateTime?
+
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  concept PnleConcept @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, conceptId])
 }
 
 
 model File {
   id             Int      @id @default(autoincrement())
   conceptId      Int
+  userId         Int
 
   originalName   String
   storedFilename String
@@ -50,11 +82,14 @@ model File {
   uploadedAt     DateTime @default(now())
 
   concept        PnleConcept @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 
 model Streak {
   id       Int       @id @default(autoincrement())
+  userId   Int       @unique
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   count    Int       @default(0)
   lastDate DateTime? @db.Date
 }
@@ -63,12 +98,16 @@ model Streak {
 model DeviceToken {
   id          Int      @id @default(autoincrement())
   token       String   @unique
+  userId      Int?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
 }
 
 
 model Notification {
   id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   title       String
   body        String
@@ -76,4 +115,3 @@ model Notification {
   read        Boolean   @default(false)
   createdAt   DateTime  @default(now())
 }
-

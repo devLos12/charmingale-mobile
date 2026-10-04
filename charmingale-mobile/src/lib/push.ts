@@ -5,6 +5,8 @@ import { Platform } from "react-native";
 
 import { BASE_URL } from "@/constant";
 import { ApiResponse } from "@/@types";
+import { getToken } from "@/lib/google";
+
 
 
 
@@ -63,11 +65,14 @@ export const registerForPushNotifications = async () => {
 
   // i-send sa backend para masave sa DeviceToken table
   try {
-
+    
     
     const res = await fetch(`${BASE_URL}/api/notification/push-register`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await getToken()}`,
+      },
       body: JSON.stringify({ token: pushTokenString }),
     });
     
